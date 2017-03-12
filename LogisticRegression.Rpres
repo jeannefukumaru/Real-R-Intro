@@ -1,0 +1,208 @@
+Logistic Regression
+========================================================
+author: Predicting Credit Card Defaulters 
+date: 
+autosize: true
+
+When to use logistic regression? 
+========================================================
+
+- With linear regression in the previous module, we assumed that the response variable (median house value) was quantitative. However, sometimes we are interested in qualitative response variables 
+
+- examples: default/no default, cancer/no cancer, buy/not buy
+
+- with qualitative response variables, we can use logistic regression 
+
+- let's consider credit card defaults as an example. Our response variable is default/no default, and our independent variable is bank balance. 
+
+Logistic Regression
+========================================================
+
+![LogisticRegressionLine](LogisticRegressionLine.png)
+source: Introduction to Statistical Learning
+
+- response variables take a value between 0 (no default) and 1(default). These can be interpreted as a probability
+- P(default = Yes | balance)
+- we choose an appropriate classification cut-off point depending on our use case. To be more conservative, we can choose a lower threshold. However, a lower threshold also means we might classify a non-defaulter as a defaulter. 
+
+Evaluating our Model
+========================================================
+- Confusion Matrix
+
+![alt text](ConfusionMatrix.png)
+source: Introduction to Statistical Learning
+
+- Confusion Matrices are confusing, so how can we make things easier? 
+
+ROC Curve
+========================================================
+
+- Visualise accuracy using an ROC curve 
+- ROC Curves plot true positive rate against false positive rate. 
+- Ideally should hug the top left corner
+
+![alt text](ROC Curve.png)
+
+ROC Curves continued
+========================================================
+![alt text](ROC Curve Continued.png)
+
+- As the curve moves to the top-left, accuracy (area under the curve) increases. Therefore we want a large area under the curve.
+
+figure source: http://gim.unmc.edu/dxtests/roc3.htm
+
+Let's get started with a dataset 
+========================================================
+
+## Credit Card Defaulters  
+A simulated data set containing information on ten thousand customers. The aim here is to predict
+which customers will default on their credit card debt.  
+
+default: A factor with levels No and Yes indicating whether the customer defaulted on their debt  
+
+student: A factor with levels No and Yes indicating whether the customer is a student  
+
+balance: The average balance that the customer has remaining on their credit card after making
+their monthly payment  
+
+income: Income of customer
+
+```{r}
+library(MASS)
+library(ISLR)
+library(caret)
+data(Default)
+```
+
+=======================================================
+```{r}
+#look at first 10 columns
+str(Default)
+```
+
+Perform train/test split 
+=======================================================
+```{r}
+set.seed(88)
+train_Index <- createDataPartition(Default$default, p=0.8, list=FALSE) 
+train_credit <- Default[train_Index,]
+test_credit <- Default[-train_Index,]
+head(train_credit)
+```
+
+Model 1: Single Variable Logistic Regression
+```{r}
+model1 <- train(default ~ balance, data = train_credit, method = "glm", family = "binomial")
+```
+
+Interpreting the Coefficients
+======================================================
+
+```{r}
+coef(model1$finalModel)
+```
+our estimates will be on a log-odds scale. For example, for every one unit increase in balance, the log-odds of default increases by about 0.005. To make the coefficients more understandable, we can use the exponential function to calculate the odds ratio for our predictors 
+```{r}
+exp(coef(model1$finalModel))
+```
+
+Therefore, for every one unit increase in balance, our odds of having good credit increases by 1.01
+
+Using our Model for Prediction
+=======================================================
+```{r}
+pred <- predict(model1, newdata=test_credit)
+head(pred)
+```
+
+Alternatively we can output class probabilities
+```{r}
+pred2 <- predict(model1, test_credit, type = "prob")
+head(pred2)
+```
+
+Evaluating our Model: Confusion Matrix
+=======================================================
+```{r}
+confusionMatrix(data=pred, test_credit$default)
+# Kappa is an alternative to accuracy that takes into account dataset imbalance
+```
+
+Area under ROC Curve 
+======================================================
+```{r}
+library(pROC)
+rpartROC <- roc(test_credit$default, pred2[,"No"])
+rpartROC
+```
+
+Model2: Three Variable Logistic Regression 
+=======================================================
+```{r}
+model2 <- train(default~ ., data = train_credit, family='binomial')
+```
+
+Do-it-yourself 
+=======================================================
+```{r}
+## using the code above as a template, apply model2 to test data. Then tabulate a Confusion Matrix ##
+## your code goes here ##
+```
+
+EXTENSION: Feature Engineering
+=======================================================
+Finding the optimal combination of independent variables is known as feature engineering.  
+
+
+A population of women who were at least 21 years old, of Pima Indian heritage and living near Phoenix, Arizona, was tested for diabetes according to World Health Organization criteria. The data were collected by the US National Institute of Diabetes and Digestive and Kidney Diseases. 
+
+Load Data 
+========================================================
+
+The dataset has already been split for us, for we load the train and test set individually
+```{r}
+train_PIMA <- Pima.tr
+test_PIMA <- Pima.te
+str(train_PIMA)
+```
+
+Our variables
+========================================================
+- npreg: number of pregnancies.
+
+- glu : plasma glucose concentration in an oral glucose tolerance test.
+
+- bp : diastolic blood pressure (mm Hg).
+
+- skin : triceps skin fold thickness (mm).
+
+- bmi : body mass index (weight in kg/(height in m)\^2).
+
+- ped : diabetes pedigree function.
+
+- age : age in years.
+
+- type : Yes or No, for diabetic according to WHO criteria.
+
+Try finding a good combination of features for predicting the onset of diabetes
+========================================================
+```{r}
+## your code goes here ##
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
