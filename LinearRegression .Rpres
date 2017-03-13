@@ -1,0 +1,153 @@
+LinearRegression 
+========================================================
+author: Predicting Boston House Prices 
+date: 
+autosize: true
+
+Introducing our Dataset 
+========================================================
+
+The Boston dataset contains the median house value for 506 neighbourhoods in Boston.
+
+Can we predict house value using variables such as average number of rooms per house, average age of house, and so on. 
+
+```{r}
+library(MASS)
+library(ISLR)
+library(caret)
+names(Boston)
+
+```
+
+Background to Our Tool: Linear Regression 
+========================================================
+
+- Predict dependent variable (y) from independent variable (x) using a straight line 
+
+          y = xb + c
+
+- Root Mean Squared Error (RMSE)
+Difference between the value predicted by the model and the observed values. A large RMSE means our model does not fit the observed values well.  
+
+- R-squared value
+Variability in the dataset that our model accounts for. An R-squared value close to 1 shows that our model explains a large proportion of the variability in our data 
+
+![LinearRegressionLine](LinearRegressionLine.png)
+
+
+Exploring the data
+========================================================
+```{r}
+?Boston
+```
+
+Boston {MASS}	R Documentation
+Housing Values in Suburbs of Boston
+
+Description
+
+The Boston data frame has 506 rows and 14 columns.
+
+Exploring the data
+========================================================
+```{r}
+str(Boston)
+```
+
+Exploring the data
+========================================================
+```{r}
+head(Boston)
+```
+
+
+Perform the train/test split 
+=======================================================
+
+- createDataPartition can preserve the relative frequencies in our dependent variable
+
+```{r}
+set.seed(7)
+train_Index <- createDataPartition(Boston$medv, p = 0.8, list=FALSE)
+train_Boston <- Boston[train_Index,]
+test_Boston <- Boston[-train_Index,]
+```
+
+
+Model 1 Single Variable Linear Regression
+========================================================
+
+```{r}
+model1 <- train(medv ~ lstat, method = 'lm', data = train_Boston)
+# view coefficients
+coef(model1$finalModel)
+model1
+```
+
+Model 2 Two Variable Linear Regression 
+========================================================
+```{r}
+model2 <- train(medv ~ lstat + age, method = 'lm', data = train_Boston)
+coef(model2$finalModel)
+model2
+```
+
+========================================================
+```{r}
+varImp(model2)
+```
+
+
+Model 3 Multiple Variable Linear Regression 
+========================================================
+```{r}
+model3 <- train(medv ~ ., method = "lm", data = train_Boston)
+coef(model3$finalModel)
+model3
+```
+
+========================================================
+```{r}
+varImp(model3)
+```
+
+Exercise: Try a few variable combinations yourself
+=======================================================
+```{r}
+## your code goes here ##
+```
+
+
+What might be affecting our model? 
+========================================================
+
+
+- outliers, which are values far away from the predicted model
+
+- correlation, which masks the effect of important variables 
+
+Correlation
+========================================================
+
+- assess correlation by creating a correlation matrix
+
+```{r}
+cor(Boston)
+```
+
+
+Looking for outliers 
+========================================================
+
+- Scatterplots are useful
+```{r}
+# small example 
+var <- c("rm", "age", "tax")
+featurePlot(x = Boston[, var],
+            y = Boston$medv,
+            plot = "scatter",
+            layout = c(3,1))
+```
+
+Improving our model 
+========================================================

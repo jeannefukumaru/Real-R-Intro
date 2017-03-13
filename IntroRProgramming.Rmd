@@ -1,0 +1,74 @@
+---
+title: "Introduction to R Programming"
+author: "RealAnalytics"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Representing Data using Data Structures 
+
+An Overview: Vectors, Matrics and Arrays, Lists, Data Frames, Factors and Tables 
+Why is this important? 
+
+- Code errors are many times due data represented as an incorrect data structure
+- As a more advanced R user, need to know when creating packages and deploying models etc. 
+
+## Stories make everything easier to understand. Let's go with Harry Potter 
+
+### Vectors 
+Homogenous
+- logical
+- character
+- integer
+- numeric
+
+```{r}
+is_wizard_as_logical_var <- c(TRUE, TRUE, FALSE)
+is.logical(is_wizard_as_logical_var)
+
+creatures_as_character_var <- c("Skrewt", "Hippogriff")
+is.character(creatures_as_character_var)
+
+owls_as_integer_var <- c(1L, 6L, 10L)
+is.integer(owls_as_integer_var)
+
+house_points_as_numeric_var <- c(1000, 2000, 3000)
+is.numeric(house_points_as_numeric_var)
+```
+
+Challenge: Represent your own variables as the different types of vectors
+
+### Matrics and Arrays
+Homogenous
+```{r}
+a <- matrix(1:6, ncol = 3, nrow = 2)
+a
+```
+```{r}
+b <- array(1:12, c(2, 3, 2))
+b
+```
+
+
+### Lists 
+Heterogenous
+```{r}
+hermione_subject_scores <- list(c("herbology","muggle studies"),c(95, 99))
+hermione_subject_scores
+```
+
+```{r}
+is.list(hermione_subject_scores)
+```
+
+### Data Frames
+Heterogenous
+```{r}
+df <- data.frame(x = c(1,2,3,4), houses = c("gryffindor","slytherin", "ravenclaw","hufflepuff"))
+str(df)
+```
+
+
