@@ -1,0 +1,26 @@
+---
+title: "Chart Stack (Scrolling)"
+author: "JWC"
+date: "21/02/2017"
+output: 
+  flexdashboard::flex_dashboard
+    vertical_layout: scroll
+---
+
+### Chart 1
+
+Manga Whau Volcano
+
+```{r}
+library(viridis)
+image(volcano, col = viridis(200))
+```
+
+### Chart 2
+
+Manga Whau Volcano 
+
+```{r}
+image(volcano, col = viridis(200, option = "A"))
+```
+

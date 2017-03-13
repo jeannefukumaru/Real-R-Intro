@@ -1,0 +1,29 @@
+---
+title: "Markdown Basics"
+author: "Jeanne"
+date: "21/02/2017"
+output: 
+  html_document: 
+        toc: true
+        toc_float: true
+---
+
+Markdown is able to show different types of text: 
+
+- *italics*
+- **bold**
+- `code`
+- [links] (http://rmarkdown.rstudio.com)
+- etc. 
+
+But you could also create 
+
+- Latex equations, $E = mc^{2}$
+- bibliographies [@rmarkdown15]
+
+# Reference
+- JJ. Allaire, et. al. 2015. "R Markdown" rmarkdown.rstudio.com
+
+# Other formats
+
+- Headers, Lists, Links, Images, Footnotes 
